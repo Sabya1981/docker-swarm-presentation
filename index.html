@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Docker Swarm</title>
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/ordina.css" id="theme">
+    <link rel="stylesheet" href="css/custom.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <script src="js/head.min.js"></script>
+    <!--Add support for earlier versions of Internet Explorer -->
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+
+            <section>
+                <h1 class="blue">Docker Swarm</h1>
+                <img src="img/docker-swarm.png" style="max-width: 400px;" />
+                <h3>Clash of the Orchestrators</h3>
+
+                <!-- <img src="img/jworks-logo.png" style="vertical-align: bottom;" width="22.5%"/> -->
+            </section>
+
+            <section>
+                <h2>Hi, my name is <span class="orange">Tom</span>.</h2>
+                <img class="circle" src="img/tom.png" style="max-width: 300px;" />
+                <p>
+                    @<a class="orange" href="https://twitter.com/tomverelst">tomverelst</a><br />
+                    Developer @ Ordina Belgium<br />
+                    <a class="orange" href="https://ordina-jworks.github.io">https://ordina-jworks.github.io</a>
+                </p>
+            </section>
+
+            <section>
+                <section>
+                  <h1 class="blue">Docker Swarm</h1>
+                  <img src="img/docker-swarm.png" style="max-width: 600px;" />
+                </section>
+                <section>
+                  <img src="img/overview-compose.png" class="transparent fragment" data-fragment-index="2" />
+                  <img src="img/overview-swarm.png" class="transparent fragment" data-fragment-index="1" style="margin-left: 37px; margin-top: -20px;"/>
+                </section>
+                <section>
+                  <svg style="width: 880px; height: 640px;">
+                    <defs>
+                      <filter id="shadow" height="130%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+                        <feOffset dx="5" dy="5" result="offsetblur"/>
+                        <feComponentTransfer xmlns="http://www.w3.org/2000/svg">
+                          <feFuncA type="linear" slope="0.2"/>
+                        </feComponentTransfer>
+                        <feMerge>
+                          <feMergeNode/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+
+                      <g id="container">
+                        <rect class="orange-box box-shadow" width="200" height="40" x="0" y="0" ry="5" rx="5" />
+                        <text x="50" y="27" style="fill: #fff; font-size: 0.6em;">CONTAINER</text>
+                      </g>
+
+                      <g id="swarm-agent">
+                        <rect class="blue-box box-shadow" width="100" height="100" x="0" y="0" ry="5" rx="5" />
+                        <text x="17" y="45" style="fill: #fff; font-size: 0.6em;">SWARM</text>
+                        <text x="21" y="70" style="fill: #fff; font-size: 0.6em;">AGENT</text>
+                      </g>
+
+                      <g id="docker-daemon">
+                        <rect class="red-box box-shadow" width="100" height="100" x="0" y="0" ry="5" rx="5" />
+                        <image x="15" y="15" height="75" width="75" xlink:href="img/docker-icon-white.png" />
+
+                      </g>
+
+                      <g id="docker-node">
+                        <rect width="360" height="260" x="-20" y="-20" stroke="black" fill="none" rx="5" ry="5" stroke-dasharray="5,5" d="M5 20 l215 0" />
+                        <use x="0" y="0" xlink:href="#swarm-agent" />
+                        <use x="0" y="120" xlink:href="#docker-daemon" />
+                        <use x="120" y="0" xlink:href="#container" />
+                        <use x="120" y="60" xlink:href="#container" />
+                        <use x="120" y="120" xlink:href="#container" />
+                        <use x="120" y="180" xlink:href="#container" />
+                      </g>
+
+                      <g id="swarm-manager">
+                        <rect class="blue-box box-shadow" width="220" height="110" x="0" y="0" ry="5" rx="5" />
+                        <image x="75" y="5" height="75" width="75" xlink:href="img/docker-icon-white.png" />
+                        <text x="30" y="90" style="fill: #fff; font-size: 0.6em;">SWARM MANAGER</text>
+                      </g>
+
+                      <g id="service-discovery">
+                        <rect class="yellow-box box-shadow" width="120" height="100" x="0" y="0" ry="5" rx="5" />
+                        <image x="35" y="15" height="50" width="50" xlink:href="img/etcd.png" />
+                        <text x="15" y="90" style="fill: #fff; font-size: 0.6em;">DISCOVERY</text>
+                      </g>
+
+                    </defs>
+
+                    <use x="220" y="0" xlink:href="#service-discovery" class="fragment" data-fragment-index="3" />
+                    <use x="0" y="340" xlink:href="#swarm-manager" class="fragment" data-fragment-index="1" />
+                    <use x="480" y="100" xlink:href="#docker-node" class="fragment" data-fragment-index="2" />
+                    <use x="480" y="380" xlink:href="#docker-node" class="fragment" data-fragment-index="2" />
+
+                    <!-- Swarm manager to discovery-->
+                    <polyline stroke-linejoin="round" points="220,390, 270,390 270,100" stroke="#f3b825" fill="transparent" stroke-width="5" class="fragment" data-fragment-index="4"/>
+
+                    <!-- Swarm manager to node 1-->
+                    <polyline stroke-linejoin="round" points="220,380, 260,380 260,250 480,250" stroke="red" fill="transparent" stroke-width="5" class="fragment" data-fragment-index="5"/>
+                    <!-- Swarm manager to node 2-->
+                    <polyline stroke-linejoin="round" points="220,400, 260,400 260,530 480,530" stroke="red" fill="transparent" stroke-width="5" class="fragment" data-fragment-index="5"/>
+
+                    <!-- Node 1 to discovery -->
+                    <polyline stroke-linejoin="round" points="480,140 290,140 290,100" stroke="#379df8" fill="transparent" stroke-width="5" class="fragment" data-fragment-index="6"/>
+                    <!-- Node 2 to discovery -->
+                    <polyline stroke-linejoin="round" points="480,420 280,420 280,100" stroke="#379df8" fill="transparent" stroke-width="5" class="fragment" data-fragment-index="6"/>
+
+
+                  </svg>
+                </section>
+            </section>
+
+            <section>
+                <h1 class="blue">Demo</h1>
+                <img src="img/finally.gif" alt="Demo!"/>
+            </section>
+
+              <section>
+                <h1>Conclusion</h1>
+              </section>
+
+              <section>
+                <h1><span class="blue">Swarm</span> = <span class="blue">Native</span></h1>
+                <h3 class="fragment"><span class="orange" style="font-size: 1.5em;">~75&#37;</span> of the native Docker commands are implemented</h2>
+                <h3 class="fragment">Target is <span class="orange" style="font-size: 1.5em;">100&#37;</span></h3>
+              </section>
+
+              <section>
+                <h1 class="blue">Lightweight</h1>
+                <h2>Run other orchestrators on top of Swarm</h2>
+                <p>(Kubernetes, Mesos, ...)</p>
+              </section>
+
+              <section>
+                <h1 class="blue">Pluggable</h1>
+                <p>Volumes</p>
+                <p>Networking</p>
+                <p>Authorization</p>
+                <p>Log Driver</p>
+                <p>Cluster Driver <span class="red">(experimental)</span></p>
+              </section>
+
+              <section>
+                <h1 class="blue">High Availibility</h1>
+                <h3 class="orange">Replicate Managers</h3>
+                <pre style="font-size: 2.4em;"><code>$ docker run \
+-d swarm manage \
+--replication \
+...</code></pre>
+              </section>
+
+              <section>
+                <h1 class="blue">Rescheduling</h1>
+                <div class="fragment" style="display: inline-block; width: 45%;">
+                  <h3 style="margin-top: 1.5em;"><span class="orange">Restart policies</span></h3>
+                  <p>always</p>
+                  <p>unless-stopped</p>
+                  <p>on-failure</p>
+                  <p>no</p>
+                </div>
+                <div class="fragment" style="display: inline-block; width: 45%;">
+                  <h3 style="margin-top: 1.5em;"><span class="orange">Rescheduling</span></h3>
+                  <p><span class="red">(experimental)</span></p>
+                  <p>on-node-failure</p>
+                  <p>&nbsp;</p>
+                  <p>&nbsp;</p>
+                </div>
+              </section>
+
+              <section>
+                <h1 class="blue">Load Balancing</h1>
+                <p>Command / Template / Key Value Store</p>
+                <p>Docker Events / DNS / Discovery</p>
+              </section>
+
+              <section id="conclusion-labels">
+                <h1 class="blue">Labels</h1>
+
+                <div class="fragment current-visible remove-height" data-fragment-index="1">
+                  <h3 class="orange">Image</h3>
+                  <pre><code>LABEL version="1.2.3"</code></pre>
+                </div>
+
+                <div class="fragment current-visible remove-height" data-fragment-index="2">
+                  <h3 class="orange">Command Line</h3>
+                  <pre><code>$ docker ps --filter \
+"label=version=1.2.3"</code></pre>
+                </div>
+
+                <div class="fragment current-visible remove-height" data-fragment-index="3">
+                  <h3 class="orange">Daemon (Node)</h3>
+                  <pre><code>$ docker daemon \
+--label \
+"version=1.2.3"</code></pre>
+                </div>
+
+                <div class="fragment current-visible remove-height" data-fragment-index="4">
+                  <h3 class="orange">Container</h3>
+                  <pre><code>$ docker run --label \
+"label=1.2.3"</code></pre>
+                </div>
+            </section>
+
+              <section>
+                <h1 class="blue">Filters</h1>
+                <div class="fragment" style="display: inline-block; width: 45%;">
+                  <h3 style="margin-top: 1.5em;"><span class="orange">Node</span></h3>
+                  <p>Constraint</p>
+                  <p>Health</p>
+                  <p>&nbsp;</p>
+                </div>
+                <div class="fragment" style="display: inline-block; width: 45%;">
+                  <h3 style="margin-top: 1.5em;"><span class="orange">Container</span></h3>
+                  <p>Affinity</p>
+                  <p>Port</p>
+                  <p>Dependency</p>
+                </div>
+              </section>
+
+              <section style="text-align: left;">
+                <h3 class="fragment blue current-visible remove-height">Final question...</h1>
+                <h1 class="orange fragment current-visible remove-height">Swarm in production?</h1>
+                <img class="fragment current-visible remove-height" src="img/overview-cluster-managers.png" />
+              </section>
+
+              <section style="font-size: 0.8em; text-align: left;">
+                <h3 class="blue">Resources</h3>
+                <p>Advanced Docker and Orchestration (Jérôme Petazzoni) - <a href="http://view.dckr.info/">http://view.dckr.info/</a>
+              </section>
+
+              <section>
+                <sectionstyle="text-align: left;">
+                <h1>Thank You!</h1>
+                <p>
+                  <img src="img/docker-friends2.png" class="transparent" width="300" style="clear:none;"/>
+                  <img src="img/jworks-logo.png" class="transparent" width="300" style="clear:none;"/>
+                </p>
+              </section>
+
+            <section style="text-align: left;" data-background="img/jworks-wallpaper-3.jpg"></section>
+        </div>
+    </div>
+    <script src="js/reveal.js"></script>
+    <script>
+        Reveal.initialize({
+            transition: 'convex',
+            dependencies: [
+                // Cross-browser shim that fully implements classList - https://github.com/eligrey/classList.js/
+                {
+                    src: 'lib/js/classList.js',
+                    condition: function () {
+                        return !document.body.classList;
+                    }
+                },
+                // Interpret Markdown in <section> elements
+                {
+                    src: 'plugin/markdown/marked.js',
+                    condition: function() {
+                        return !!document.querySelector( '[data-markdown]' );
+                    }
+                },
+                {
+                    src: 'plugin/markdown/markdown.js',
+                    condition: function() {
+                        return !!document.querySelector( '[data-markdown]' );
+                    }
+                },
+                // Syntax highlight for <code> elements
+                {
+                    src: 'plugin/highlight/highlight.js',
+                    async: true,
+                    callback: function () {
+                        hljs.initHighlightingOnLoad();
+                    }
+                },
+                // Zoom in and out with Alt+click
+                {
+                    src: 'plugin/zoom-js/zoom.js',
+                    async: true
+                },
+                // Speaker notes
+                {
+                    src: 'plugin/notes/notes.js',
+                    async: true
+                }
+        ]
+        });
+    </script>
+</body>
+
+</html>

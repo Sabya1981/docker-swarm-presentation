@@ -1,0 +1,66 @@
+/**
+ * Custom styling for each presentation.
+ *
+ * Copyright (C) 2016 JWorks - http://www.ordina.be
+ */
+
+.blue {
+    color: rgb(55, 157, 248) !important;
+}
+
+img.circle {
+  border: 0.3em solid #e98300;
+  border-radius: 999em;
+  opacity: 0.8;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.55);
+}
+
+.orange {
+  color: #e98300 !important;
+}
+
+.red {
+  color: rgb(175,66,66) !important;
+}
+
+.reveal div.block {
+    padding: 0.5em;
+    margin: 0.5em;
+    border-radius: 0.2em;
+}
+
+svg .box-shadow {
+  filter:url(#shadow);
+}
+
+svg .blue-box {
+  fill:rgb(55, 157, 248);
+}
+
+svg .orange-box {
+  fill: #e98300;
+}
+
+svg .red-box {
+  fill: rgb(230,20,20);
+}
+
+svg .yellow-box {
+  fill: #f3b825;
+}
+
+svg.text {
+  vertical-align: middle;
+  font-size: 0.6em;
+}
+
+.fragment.current-visible.remove-height.visible:not(.current-fragment) {
+    display: none;
+    height:0px;
+    line-height: 0px;
+    font-size: 0px;
+}
+
+#conclusion-labels pre {
+    font-size: 2em;
+}
